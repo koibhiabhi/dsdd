@@ -1,0 +1,41 @@
+{
+  "books/{companyId}/accounts": {
+    "code": "string",
+    "name": "string",
+    "type": "Asset|Liability|Income|Expense|Equity",
+    "openingBalance": "number?",
+    "openingBalanceType": "debit|credit?",
+    "createdAt": "timestamp"
+  },
+  "books/{companyId}/parties": {
+    "name": "string",
+    "createdAt": "timestamp"
+  },
+  "books/{companyId}/vouchers": {
+    "legacyRefId": "string?  // for migrated entries",
+    "type": "Purchase|Sales|Receipt|Payment|Journal",
+    "date": "timestamp",
+    "partyName": "string?",
+    "narration": "string?",
+    "inventoryLines": [
+      {
+        "materialId": "string",
+        "materialName": "string?",
+        "qtyBags": "number",
+        "ratePerBag": "number?",
+        "amount": "number"
+      }
+    ],
+    "lines": [
+      {
+        "accountCode": "string",
+        "accountName": "string",
+        "debit": "number",
+        "credit": "number",
+        "party": "string?"
+      }
+    ],
+    "status": "Pending|Partially Paid|Paid?",
+    "createdAt": "timestamp"
+  }
+}
