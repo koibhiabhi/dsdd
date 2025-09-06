@@ -1,12 +1,18 @@
 import React, { useMemo, useState } from 'react'
-import { collection, orderBy, query, where } from 'firebase/firestore'
+import { collection, orderBy, query } from 'firebase/firestore'
 import { db } from '../firebase'
 import { useFirestoreLive } from '../hooks/useFirestoreLive'
-import { balance, statusFromAllocations } from '../lib/accounting'
+import { balance } from '../lib/accounting'
 
 export default function PartyLedger({ companyId }){
   const [party, setParty] = useState('')
-  const q = query(collection(db,'books',companyId,'vouchers'), orderBy('date','asc'))
+
+  if (!companyId) return null
+
+  const q = query(
+    collection(db,'books',companyId,'vouchers'),
+    orderBy('date','asc')
+  )
   const rows = useFirestoreLive(q)
 
   const parties = useMemo(()=>{
