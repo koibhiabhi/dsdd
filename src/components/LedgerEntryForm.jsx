@@ -17,20 +17,26 @@ export default function LedgerEntryForm({ companyId }){
   },[qty,rate])
 
   async function save(){
+    if(!companyId) return alert("Select a company first")
+
     const v = {
       type,
       date: new Date(),
       partyName: party || '',
       narration: narration || '',
       inventoryLines: material ? [{
-        materialId: material, qtyBags: Number(qty||0), ratePerBag: rate?Number(rate):null,
+        materialId: material,
+        qtyBags: Number(qty||0),
+        ratePerBag: rate?Number(rate):null,
         amount: amount?Number(amount):Number(computedAmount||0)
       }] : [],
       lines: [],
       createdAt: serverTimestamp(),
       status: 'Pending',
     }
+
     const amt = v.inventoryLines[0]?.amount || 0
+
     if(type==='Purchase'){
       v.lines.push({ accountCode:'1000', accountName:'Inventory', debit: amt, credit: 0 })
       v.lines.push({ accountCode:'2000', accountName:'Accounts Payable', debit: 0, credit: amt, party: v.partyName })
@@ -44,6 +50,7 @@ export default function LedgerEntryForm({ companyId }){
       v.lines.push({ accountCode:'2000', accountName:'Accounts Payable', debit: amt, credit: 0, party: v.partyName })
       v.lines.push({ accountCode:'1200', accountName:'Cash', debit: 0, credit: amt })
     }
+
     await addDoc(collection(db,'books',companyId,'vouchers'), v)
     alert('Saved.')
     setParty(''); setMaterial(''); setQty(''); setRate(''); setAmount(''); setNarration('')
