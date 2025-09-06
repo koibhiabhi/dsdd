@@ -4,7 +4,12 @@ import { db } from '../firebase'
 import { useFirestoreLive } from '../hooks/useFirestoreLive'
 
 export default function LedgerTable({ companyId }){
-  const q = query(collection(db,'books',companyId,'vouchers'), orderBy('date','desc'))
+  if (!companyId) return null
+
+  const q = query(
+    collection(db, 'books', companyId, 'vouchers'),
+    orderBy('date','desc')
+  )
   const rows = useFirestoreLive(q)
   const [search, setSearch] = useState('')
 
